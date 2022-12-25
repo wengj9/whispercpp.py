@@ -115,4 +115,8 @@ cdef class Whisper:
             whisper_full_get_segment_text(self.ctx, i).decode() for i in range(n_segments)
         ]
 
+    def get_segment_start_end(self, int i_segment) -> tuple[int, int]:
+        cdef int64_t segment_start = whisper_full_get_segment_t0(i_segment)
+        cdef int64_t segment_end = whisper_full_get_segment_t1(i_segment)
 
+        return segment_start, segment_end
