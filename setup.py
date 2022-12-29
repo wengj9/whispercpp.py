@@ -2,24 +2,37 @@ from setuptools import setup, Extension
 from Cython.Build import cythonize
 import sys
 import numpy
-import os
+
+cxx_flags = ["-O3", "-std=c++11"]
+c_flags = ["-O3", "-std=c11"]
+ld_flags: list[str] = []
 
 if sys.platform == "darwin":
-    os.environ["CFLAGS"] = "-DGGML_USE_ACCELERATE -O3 -std=c11"
-    os.environ["CXXFLAGS"] = "-DGGML_USE_ACCELERATE -O3 -std=c++11"
-    os.environ["LDFLAGS"] = "-framework Accelerate"
+    cxx_flags.append("-DGGML_USE_ACCELERATE")
+    c_flags.append("-DGGML_USE_ACCELERATE")
+    ld_flags.extend(["-framework", "Accelerate"])
 else:
-    os.environ["CFLAGS"] = "-mavx -mavx2 -mfma -mf16c -O3 -std=c11"
-    os.environ["CXXFLAGS"] = "-mavx -mavx2 -mfma -mf16c -O3 -std=c++11"
+    cxx_flags.extend(["-mavx", "-mavx2", "-mfma", "-mf16c"])
+    c_flags.extend(["-mavx", "-mavx2", "-mfma", "-mf16c"])
 
+external_modules = [
+    Extension(
+        name="ggml",
+        sources=["./whisper.cpp/ggml.c"],
+        extra_compile_args=c_flags,
+        extra_link_args=ld_flags,
+    ),
+    Extension(
+        name="whispercpp",
+        sources=["./whisper.cpp/whisper.cpp"],
+        extra_compile_args=cxx_flags,
+        extra_link_args=ld_flags,
+    ),
+    *cythonize("whispercpp.pyx"),
+]
 
 setup(
-    name="whispercpp",
-    version="1.0",
-    description="Python bindings for whisper.cpp",
-    author="Luke Southam",
-    author_email="luke@devthe.com",
-    ext_modules=cythonize("whispercpp.pyx"),
+    ext_modules=external_modules,
     include_dirs=["./whisper.cpp/", numpy.get_include()],
-    # install_requires=["numpy", "ffmpeg-python", "requests"],
+    zip_safe=False,
 )
