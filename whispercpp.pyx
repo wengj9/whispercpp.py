@@ -1,6 +1,5 @@
 #!python
 # cython: language_level=3
-# # distutils: sources = ./whisper.cpp/ggml.c ./whisper.cpp/whisper.cpp
 
 import ffmpeg
 import numpy as np
