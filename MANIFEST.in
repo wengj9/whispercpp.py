@@ -1,0 +1,4 @@
+include whispercpp.pyx
+include whispercpp.pxd
+
+include whisper.cpp/*.h

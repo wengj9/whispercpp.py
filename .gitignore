@@ -344,3 +344,4 @@ poetry.toml
 
 # ignore Cython-generated code
 whispercpp.cpp
+whispercpp.c

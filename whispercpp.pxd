@@ -33,7 +33,7 @@ cdef extern from "whisper.h" nogil:
         int64_t t0
         int64_t t1
         float vlen
-    ctypedef struct whisper_context:
+    struct whisper_context:
         pass
     ctypedef struct anon_2:
         int n_past
@@ -41,7 +41,7 @@ cdef extern from "whisper.h" nogil:
         int n_past
         int beam_width
         int n_best
-    ctypedef struct whisper_full_params:
+    struct whisper_full_params:
         int strategy
         int n_threads
         int n_max_text_ctx

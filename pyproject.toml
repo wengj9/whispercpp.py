@@ -1,2 +1,13 @@
 [build-system]
-requires = ["setuptools", "wheel", "Cython", "numpy"]
+requires = ["setuptools", "numpy", "wheel", "cython"]
+build-backend = "setuptools.build_meta"
+
+[project]
+description = "A Python wrapper for whisper.cpp"
+authors = [
+    { name = "Luke Southam", email = "luke@devthe.com" },
+    # { name = "James Weng", email = "wengj@umich.edu" },
+]
+name = "whispercpp.py"
+version = "0.1.0"
+dependencies = ["numpy", "requests", "ffmpeg-python"]
