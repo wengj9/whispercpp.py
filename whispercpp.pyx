@@ -1,5 +1,6 @@
 #!python
 # cython: language_level=3
+# distutils: language = c++
 
 import ffmpeg
 import numpy as np
