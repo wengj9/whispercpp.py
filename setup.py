@@ -2,18 +2,21 @@ from setuptools import setup, Extension
 from Cython.Build import cythonize
 import sys
 import numpy
+import os
 
 cxx_flags = ["-O3", "-std=c++17", "-Wall", "-Wextra", "-Wpedantic"]
-c_flags = ["-O3", "-std=c11", "-Wall", "-Wextra", "-Wpedantic"]
 ld_flags: list[str] = []
 
 if sys.platform == "darwin":
     cxx_flags.append("-DGGML_USE_ACCELERATE")
-    c_flags.append("-DGGML_USE_ACCELERATE")
     ld_flags.extend(["-framework", "Accelerate"])
+
+    os.environ['CFLAGS']   = '-DGGML_USE_ACCELERATE -O3 -std=c11'
+    os.environ['LDFLAGS']  = '-framework Accelerate'
 else:
     cxx_flags.extend(["-mavx", "-mavx2", "-mfma", "-mf16c"])
-    c_flags.extend(["-mavx", "-mavx2", "-mfma", "-mf16c"])
+    
+    os.environ['CFLAGS']   = '-mavx -mavx2 -mfma -mf16c -O3 -std=c11'
 
 cythonize("whispercpp.pyx")
 
