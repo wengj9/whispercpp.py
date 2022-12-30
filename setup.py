@@ -4,25 +4,27 @@ import sys
 import numpy
 import os
 
-cxx_flags = ["-O3", "-std=c++17", "-Wall", "-Wextra", "-Wpedantic"]
+cxx_flags = ["-O3", "-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-pthread"]
+os.environ["CFLAGS"] = "-O3 -std=c11 -pthread "
 ld_flags: list[str] = []
 
 if sys.platform == "darwin":
     cxx_flags.append("-DGGML_USE_ACCELERATE")
     ld_flags.extend(["-framework", "Accelerate"])
 
-    os.environ["CFLAGS"] = "-DGGML_USE_ACCELERATE -O3 -std=c11"
+    os.environ["CFLAGS"] += "-DGGML_USE_ACCELERATE "
     os.environ["LDFLAGS"] = "-framework Accelerate"
 else:
-    cxx_flags.extend(["-mavx", "-mavx2", "-mfma", "-mf16c"])
+    cxx_flags.extend(["-mavx", "-mavx2", "-mfma", "-mf16c", "-D_POSIX_SOURCE", "-D_GNU_SOURCE"])
 
-    os.environ["CFLAGS"] = "-mavx -mavx2 -mfma -mf16c -O3 -std=c11"
+    os.environ["CFLAGS"] += "-mavx -mavx2 -mfma -mf16c -O3 -std=c11 -D_POSIX_SOURCE -D_GNU_SOURCE"
 
 module = Extension(
     name="whispercpp",
     sources=["whispercpp.pyx", "whisper.cpp/whisper.cpp"],
     extra_compile_args=cxx_flags,
     extra_link_args=ld_flags,
+    libraries=["pthread"],
 )
 
 static_libs = [
