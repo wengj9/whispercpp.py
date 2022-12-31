@@ -4,20 +4,21 @@ import sys
 import numpy
 import os
 
-cxx_flags = ["-Og", "-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-pthread", "-g3", "-ggdb", "-fsanitize=address"]
-os.environ["CFLAGS"] = "-Og -std=c11 -pthread -g3 -ggdb -fsanitize=address "
-ld_flags: list[str] = ["-fsanitize=address"]
+cxx_flags = ["-O3", "-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-pthread", "-g3", "-ggdb"]
+c_flags = ["-O3", "-std=c11", "-Wall", "-Wextra", "-Wpedantic", "-pthread", "-g3", "-ggdb"]
+ld_flags: list[str] = []
 
 if sys.platform == "darwin":
     cxx_flags.append("-DGGML_USE_ACCELERATE")
     ld_flags.extend(["-framework", "Accelerate"])
 
-    os.environ["CFLAGS"] += "-DGGML_USE_ACCELERATE "
-    os.environ["LDFLAGS"] = "-framework Accelerate"
+    c_flags.append("-DGGML_USE_ACCELERATE")
 else:
     cxx_flags.extend(["-mavx", "-mavx2", "-mfma", "-mf16c", "-D_POSIX_SOURCE", "-D_GNU_SOURCE"])
+    c_flags.extend(["-mavx", "-mavx2", "-mfma", "-mf16c", "-D_POSIX_SOURCE", "-D_GNU_SOURCE"])
 
-    os.environ["CFLAGS"] += "-mavx -mavx2 -mfma -mf16c -std=c11 -D_POSIX_SOURCE -D_GNU_SOURCE"
+os.environ["LDFLAGS"] = " ".join(ld_flags)
+os.environ["CFLAGS"] = " ".join(c_flags)
 
 module = Extension(
     name="whispercpp",
