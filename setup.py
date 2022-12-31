@@ -4,8 +4,8 @@ import sys
 import numpy
 import os
 
-cxx_flags = ["-O3", "-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-pthread"]
-os.environ["CFLAGS"] = "-O3 -std=c11 -pthread "
+cxx_flags = ["-Ofast", "-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-pthread", "-g3", "-ggdb"]
+os.environ["CFLAGS"] = "-Ofast -std=c11 -pthread -g3 -ggdb "
 ld_flags: list[str] = []
 
 if sys.platform == "darwin":
@@ -17,7 +17,7 @@ if sys.platform == "darwin":
 else:
     cxx_flags.extend(["-mavx", "-mavx2", "-mfma", "-mf16c", "-D_POSIX_SOURCE", "-D_GNU_SOURCE"])
 
-    os.environ["CFLAGS"] += "-mavx -mavx2 -mfma -mf16c -O3 -std=c11 -D_POSIX_SOURCE -D_GNU_SOURCE"
+    os.environ["CFLAGS"] += "-mavx -mavx2 -mfma -mf16c -std=c11 -D_POSIX_SOURCE -D_GNU_SOURCE"
 
 module = Extension(
     name="whispercpp",
@@ -32,7 +32,7 @@ static_libs = [
 ]
 
 setup(
-    ext_modules=cythonize(module),
+    ext_modules=cythonize(module, gdb_debug=True),
     libraries=static_libs,
     include_dirs=["whisper.cpp/", numpy.get_include()],
     zip_safe=False,
