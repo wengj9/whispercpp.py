@@ -4,9 +4,9 @@ import sys
 import numpy
 import os
 
-cxx_flags = ["-Og", "-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-pthread", "-g3", "-ggdb"]
-os.environ["CFLAGS"] = "-Og -std=c11 -pthread -g3 -ggdb "
-ld_flags: list[str] = []
+cxx_flags = ["-Og", "-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-pthread", "-g3", "-ggdb", "-fsanitize=address"]
+os.environ["CFLAGS"] = "-Og -std=c11 -pthread -g3 -ggdb -fsanitize=address "
+ld_flags: list[str] = ["-shared-libsan"]
 
 if sys.platform == "darwin":
     cxx_flags.append("-DGGML_USE_ACCELERATE")
