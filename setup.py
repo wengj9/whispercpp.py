@@ -4,8 +4,8 @@ import sys
 import numpy
 import os
 
-cxx_flags = ["-Ofast", "-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-pthread", "-g3", "-ggdb"]
-os.environ["CFLAGS"] = "-Ofast -std=c11 -pthread -g3 -ggdb "
+cxx_flags = ["-Og", "-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-pthread", "-g3", "-ggdb"]
+os.environ["CFLAGS"] = "-Og -std=c11 -pthread -g3 -ggdb "
 ld_flags: list[str] = []
 
 if sys.platform == "darwin":
