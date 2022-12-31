@@ -6,7 +6,7 @@ import os
 
 cxx_flags = ["-Og", "-std=c++17", "-Wall", "-Wextra", "-Wpedantic", "-pthread", "-g3", "-ggdb", "-fsanitize=address"]
 os.environ["CFLAGS"] = "-Og -std=c11 -pthread -g3 -ggdb -fsanitize=address "
-ld_flags: list[str] = ["-shared-libsan"]
+ld_flags: list[str] = ["-fsanitize=address"]
 
 if sys.platform == "darwin":
     cxx_flags.append("-DGGML_USE_ACCELERATE")
